@@ -1,0 +1,67 @@
+# Google Cloud Fundamentals: Getting Started with Deployment Manager and Cloud Monitoring
+
+## Objectives
+
+In this lab, you will learn how to perform the following tasks:
+
+	- Create a Deployment Manager deployment.
+
+	- Update a Deployment Manager deployment.
+
+	- View the load on a VM instance using Cloud Monitoring.
+
+## Steps
+
+Prior to the lab. ensure that the following APIs are enabled in the APIs and Services menu:
+
+	- Cloud Deployment Manager v2 API
+
+	- Cloud Runtime Configuration API
+
+	- Cloud Monitoring API
+
+1. Create a Deployment Manager deployment
+
+	export MY_ZONE=us-central1-a
+	
+     1. Download an editable Deployment Manager template:
+     
+        	gsutil cp gs://cloud-training/gcpfcoreinfra/mydeploy.yaml mydeploy.yaml
+        	
+      2. Use the sed command to replace the PROJECT_ID placeholder string with your Google Cloud Platform project ID using this command:
+      
+      	sed -i -e "s/PROJECT_ID/$DEVSHELL_PROJECT_ID/" mydeploy.yaml
+      	
+      3. Use the sed command to replace the ZONE placeholder string with your Google Cloud Platform zone using this command:
+      
+      	sed -i -e "s/ZONE/$MY_ZONE/" mydeploy.yaml
+      	
+      4. Build a deployment from the template:
+      
+      	gcloud deployment-manager deployments create my-first-depl --config mydeploy.yaml
+      	
+2. Update a Deployment Manager deployment.
+
+      1. Launch the nano text editor to edit the mydeploy.yaml file:
+      
+      	nano mydeploy.yaml
+      	
+      2. Find the line that sets the value of the startup script, value: "apt-get update", and edit it so that it looks like this:
+      
+      	      value: "apt-get update; apt-get install nginx-light -y"
+      	      
+      	   **Press Ctrl+O and then press Enter to save your edited file.**
+
+	   **Press Ctrl+X to exit the nano text editor.**
+	   
+3. View the load on a VM instance using Cloud Monitoring.
+
+SSH to my-vm instance.
+
+       1. Execute this command to create a CPU load:
+       
+       	dd if=/dev/urandom | gzip -9 >> /dev/null &
+       	
+       2. Terminate your workload generator
+       	
+       	kill %1
